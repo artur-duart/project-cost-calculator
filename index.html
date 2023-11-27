@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Calculadora de Custo de Projeto</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+			rel="stylesheet"
+		/>
+
+		<link rel="stylesheet" href="style.css" />
+		<script src="script.js" defer></script>
+	</head>
+
+	<body>
+		<main>
+			<div class="resume">
+				<div>
+					<p>Tot. Horas:</p>
+					<span class="total-hours-worked">00</span>
+				</div>
+
+				<div>
+					<p>Lucro: R$</p>
+					<span class="profit">0,00</span>
+				</div>
+			</div>
+
+			<div class="new-item">
+				<div class="inputs">
+					<div class="div-project-name">
+						<label for="project-name">Nome do Projeto:</label>
+						<input type="text" id="project-name" />
+					</div>
+					<div class="div-price-hour">
+						<label for="price-per-hour">Preço/Hora:</label>
+						<input type="text" id="price-per-hour" />
+					</div>
+					<div class="div-start-time">
+						<label for="start-datetime">Data/Hora Inicial:</label>
+						<input type="datetime-local" id="start-datetime" />
+					</div>
+					<div class="div-end-time">
+						<label for="end-datetime">Data/Hora Final:</label>
+						<input type="datetime-local" id="end-datetime" />
+					</div>
+				</div>
+
+				<button id="btn-new">Incluir</button>
+			</div>
+
+			<div class="div-table">
+				<table>
+					<thead>
+						<tr>
+							<th>Nome do Projeto</th>
+							<th>Horas Investidas</th>
+							<th>Preço Final</th>
+							<th class="column-action"></th>
+						</tr>
+					</thead>
+
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</main>
+	</body>
+</html>
