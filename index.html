@@ -12,6 +12,14 @@
 			rel="stylesheet"
 		/>
 
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+			integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
+
 		<link rel="stylesheet" href="style.css" />
 		<script src="script.js" defer></script>
 	</head>
@@ -37,8 +45,8 @@
 						<input type="text" id="project-name" />
 					</div>
 					<div class="div-price-hour">
-						<label for="price-per-hour">Preço/Hora:</label>
-						<input type="text" id="price-per-hour" />
+						<label for="price-per-hour">Valor/Hora:</label>
+						<input type="number" id="price-per-hour" />
 					</div>
 					<div class="div-start-time">
 						<label for="start-datetime">Data/Hora Inicial:</label>
@@ -60,12 +68,11 @@
 							<th>Nome do Projeto</th>
 							<th>Horas Investidas</th>
 							<th>Preço Final</th>
-							<th class="column-action"></th>
+							<th></th>
 						</tr>
 					</thead>
 
-					<tbody>
-					</tbody>
+					<tbody></tbody>
 				</table>
 			</div>
 		</main>
