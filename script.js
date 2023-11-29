@@ -11,15 +11,37 @@ const totalHoursWorked = document.querySelector('#total-hours-worked');
 const profit = document.querySelector('#profit');
 
 const projectPrices = [];
+const projectHours = [];
 
 function calculateHoursBetweenDates(startDate, endDate) {
-	let diffInMs = new Date(endDate) - new Date(startDate);
+	let diffInMs = endDate - startDate;
 	let diffInHours = diffInMs / (1000 * 60 * 60);
-	return parseFloat(diffInHours.toFixed(2));
+	diffInHours = parseFloat(diffInHours.toFixed(2));
+	projectHours.push(diffInHours);
+	return diffInHours;
+}
+
+function validateDates(startDate, endDate) {
+	let formattedStartDate = new Date(startDate);
+	let formattedEndDate = new Date(endDate);
+
+	if (formattedStartDate > formattedEndDate) {
+		alert(
+			'Eita, ainda não é possível viajar no tempo, haha! A data e hora de início devem ser anteriores à data e hora de término.'
+		);
+		return;
+	} else if (formattedStartDate == formattedEndDate) {
+		alert(
+			'A data e hora de início e término não podem ser iguais. Por favor, insira um intervalo de tempo válido.'
+		);
+		return;
+	}
+
+	return calculateHoursBetweenDates(formattedStartDate, formattedEndDate);
 }
 
 function calculateProjectPrice(startDate, endDate, pricePerHour) {
-	let hours = Number(calculateHoursBetweenDates(startDate, endDate));
+	let hours = Number(validateDates(startDate, endDate));
 	let price = Number(pricePerHour);
 	let finalPrice = hours * price;
 	finalPrice = parseFloat(finalPrice.toFixed(2));
@@ -53,10 +75,16 @@ function sumArrayElements(array) {
 function insertItem() {
 	if (validateInputs()) {
 		let tr = document.createElement('tr');
-		let investedHours = calculateHoursBetweenDates(
+		let investedHours = validateDates(
 			startDateTime.value,
 			endDateTime.value
 		);
+
+		// Verifica se investedHours é um número antes de prosseguir
+		if (isNaN(investedHours)) {
+			return;
+		}
+
 		let finalPrice = calculateProjectPrice(
 			startDateTime.value,
 			endDateTime.value,
@@ -71,7 +99,8 @@ function insertItem() {
   `;
 
 		tbody.appendChild(tr);
-		console.log(sumArrayElements(projectPrices));
+		profit.innerHTML = sumArrayElements(projectPrices);
+		totalHoursWorked.innerHTML = sumArrayElements(projectHours);
 	}
 }
 
