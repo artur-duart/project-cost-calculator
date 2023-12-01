@@ -80,7 +80,6 @@ function insertItem() {
 			endDateTime.value
 		);
 
-		// Verifica se investedHours é um número antes de prosseguir
 		if (isNaN(investedHours)) {
 			return;
 		}
@@ -93,8 +92,8 @@ function insertItem() {
 
 		tr.innerHTML = `
     <td>${projectName.value}</td>
-		<td>${investedHours.toLocaleString()}</td> <!-- formata para string aqui -->
-    <td>R$ ${finalPrice.toLocaleString()}</td> <!-- formata para string aqui -->
+		<td>${investedHours.toLocaleString()}</td>
+    <td>R$ ${finalPrice.toLocaleString()}</td>
 		<td class="column-action"><button class="delete-btn"><i class="fa-solid fa-trash"></i></button></td>
   `;
 
