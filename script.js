@@ -10,17 +10,17 @@ const btn = document.querySelector('#btn-new');
 const totalHoursWorked = document.querySelector('#total-hours-worked');
 const profit = document.querySelector('#profit');
 
-const projectPrices = [];
-const projectHours = [];
+let projects = [];
 
+// Calcula a diferença em horas entre duas datas.
 function calculateHoursBetweenDates(startDate, endDate) {
 	let diffInMs = endDate - startDate;
 	let diffInHours = diffInMs / (1000 * 60 * 60);
 	diffInHours = parseFloat(diffInHours.toFixed(2));
-	projectHours.push(diffInHours);
 	return diffInHours;
 }
 
+// Valida se a data de início é anterior à data de término e se não são iguais.Valida se a data de início é anterior à data de término e se não são iguais.
 function validateDates(startDate, endDate) {
 	let formattedStartDate = new Date(startDate);
 	let formattedEndDate = new Date(endDate);
@@ -40,15 +40,16 @@ function validateDates(startDate, endDate) {
 	return calculateHoursBetweenDates(formattedStartDate, formattedEndDate);
 }
 
+// Calcula o preço do projeto com base nas horas trabalhadas e no preço por hora.
 function calculateProjectPrice(startDate, endDate, pricePerHour) {
 	let hours = Number(validateDates(startDate, endDate));
 	let price = Number(pricePerHour);
 	let finalPrice = hours * price;
 	finalPrice = parseFloat(finalPrice.toFixed(2));
-	projectPrices.push(finalPrice);
 	return finalPrice;
 }
 
+// Verifica se todos os campos foram preenchidos e se o preço por hora é um número válido.
 function validateInputs() {
 	if (
 		!projectName.value ||
@@ -66,15 +67,60 @@ function validateInputs() {
 	return true;
 }
 
-function sumArrayElements(array) {
-	return array.reduce((a, b) => {
-		return a + b;
-	});
+// Insere um novo projeto na tabela.
+function insertRow(project) {
+	let tr = document.createElement('tr');
+
+	tr.innerHTML = `
+		<td>${project.name}</td>
+		<td>${project.hours}</td>
+		<td>R$ ${project.price}</td>
+		<td class="column-action"><button class="delete-btn"><i class="fa-solid fa-trash"></i></button></td>
+	`;
+
+	tbody.appendChild(tr);
 }
 
+// Calcula o lucro total com base em todos os projetos.
+function calculateTotalProfit() {
+	let totalProfit = 0;
+	for (let project of projects) {
+		totalProfit += project.price;
+	}
+	return totalProfit;
+}
+
+// Calcula o total de horas trabalhadas com base em todos os projetos.
+function calculateTotalHoursWorked() {
+	let totalHours = 0;
+	for (let project of projects) {
+		totalHours += project.hours;
+	}
+	return totalHours;
+}
+
+// Salva os projetos no localStorage.
+function saveData() {
+	localStorage.setItem('projects', JSON.stringify(projects));
+}
+
+// Carrega os projetos salvos no localStorage.
+function loadData() {
+	const loadedProjects = localStorage.getItem('projects');
+
+	if (loadedProjects) {
+		projects = JSON.parse(loadedProjects);
+		projects.forEach((project) => {
+			insertRow(project);
+		});
+		profit.innerHTML = calculateTotalProfit();
+		totalHoursWorked.innerHTML = calculateTotalHoursWorked();
+	}
+}
+
+// Insere um novo projeto se todos os inputs forem preenchidos corretamente.
 function insertItem() {
 	if (validateInputs()) {
-		let tr = document.createElement('tr');
 		let investedHours = validateDates(
 			startDateTime.value,
 			endDateTime.value
@@ -90,17 +136,17 @@ function insertItem() {
 			pricePerHour.value
 		);
 
-		tr.innerHTML = `
-    <td>${projectName.value}</td>
-		<td>${investedHours.toLocaleString()}</td>
-    <td>R$ ${finalPrice.toLocaleString()}</td>
-		<td class="column-action"><button class="delete-btn"><i class="fa-solid fa-trash"></i></button></td>
-  `;
+		let project = {
+			name: projectName.value,
+			hours: investedHours,
+			price: finalPrice,
+		};
 
-		tbody.appendChild(tr);
-		profit.innerHTML = sumArrayElements(projectPrices);
-		totalHoursWorked.innerHTML = sumArrayElements(projectHours);
+		projects.push(project);
+		insertRow(project);
+		saveData();
 	}
 }
 
+window.onload = loadData;
 btn.onclick = insertItem;
