@@ -86,6 +86,7 @@ function calculateTotalHoursWorked() {
 }
 
 // Função para salvar os projetos no localStorage
+// Função para salvar os projetos no localStorage
 function saveData() {
 	localStorage.setItem('projects', JSON.stringify(projects));
 }
@@ -94,6 +95,7 @@ function saveData() {
 function loadData() {
 	const loadedProjects = localStorage.getItem('projects');
 
+	// Limpa o tbody
 	tbody.innerHTML = '';
 
 	if (loadedProjects) {
@@ -101,32 +103,38 @@ function loadData() {
 		projects.forEach((project, index) => {
 			insertRow(project, index);
 		});
-		profit.innerHTML = calculateTotalProfit();
-		totalHoursWorked.innerHTML = calculateTotalHoursWorked();
+		profit.innerHTML = calculateTotalProfit().toLocaleString('pt-BR');
+		totalHoursWorked.innerHTML =
+			calculateTotalHoursWorked().toLocaleString('pt-BR');
 	}
 }
 
 // Função para inserir um novo projeto na tabela
 function insertRow(project, index) {
-    let tr = document.createElement('tr');
+	let tr = document.createElement('tr');
 
-    tr.innerHTML = `
+	tr.innerHTML = `
         <td>${project.name}</td>
-        <td>${project.hours}</td>
-        <td>R$ ${project.price}</td>
+        <td>${project.hours.toLocaleString('pt-BR')}</td>
+        <td>R$ ${project.price.toLocaleString('pt-BR')}</td>
         <td class="column-action"></td>
     `;
 
-    let deleteButton = document.createElement('button');
-    deleteButton.classList.add('delete-btn');
-    deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
-    deleteButton.addEventListener('click', () => {
-        deleteProject(index);
-    });
+	let deleteButton = document.createElement('button');
+	deleteButton.classList.add('delete-btn');
+	deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+	deleteButton.addEventListener('click', () => {
+		const confirmation = confirm(
+			'Você deseja realmente excluir este projeto?'
+		);
+		if (confirmation) {
+			deleteProject(index);
+		}
+	});
 
-    tr.querySelector('.column-action').appendChild(deleteButton);
+	tr.querySelector('.column-action').appendChild(deleteButton);
 
-    tbody.appendChild(tr);
+	tbody.appendChild(tr);
 }
 
 // Função para deletar um projeto
@@ -163,6 +171,11 @@ function insertItem() {
 		projects.push(project);
 		saveData();
 		loadData();
+
+		// Limpa todos os campos, exceto o de valor por hora
+		projectName.value = '';
+		startDateTime.value = '';
+		endDateTime.value = '';
 	}
 }
 
