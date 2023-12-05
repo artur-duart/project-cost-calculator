@@ -67,20 +67,6 @@ function validateInputs() {
 	return true;
 }
 
-// Insere um novo projeto na tabela.
-function insertRow(project) {
-	let tr = document.createElement('tr');
-
-	tr.innerHTML = `
-		<td>${project.name}</td>
-		<td>${project.hours}</td>
-		<td>R$ ${project.price}</td>
-		<td class="column-action"><button class="delete-btn"><i class="fa-solid fa-trash"></i></button></td>
-	`;
-
-	tbody.appendChild(tr);
-}
-
 // Calcula o lucro total com base em todos os projetos.
 function calculateTotalProfit() {
 	let totalProfit = 0;
@@ -99,26 +85,58 @@ function calculateTotalHoursWorked() {
 	return totalHours;
 }
 
-// Salva os projetos no localStorage.
+// Função para salvar os projetos no localStorage
 function saveData() {
 	localStorage.setItem('projects', JSON.stringify(projects));
 }
 
-// Carrega os projetos salvos no localStorage.
+// Função para carregar os projetos salvos no localStorage
 function loadData() {
 	const loadedProjects = localStorage.getItem('projects');
 
+	tbody.innerHTML = '';
+
 	if (loadedProjects) {
 		projects = JSON.parse(loadedProjects);
-		projects.forEach((project) => {
-			insertRow(project);
+		projects.forEach((project, index) => {
+			insertRow(project, index);
 		});
 		profit.innerHTML = calculateTotalProfit();
 		totalHoursWorked.innerHTML = calculateTotalHoursWorked();
 	}
 }
 
-// Insere um novo projeto se todos os inputs forem preenchidos corretamente.
+// Função para inserir um novo projeto na tabela
+function insertRow(project, index) {
+    let tr = document.createElement('tr');
+
+    tr.innerHTML = `
+        <td>${project.name}</td>
+        <td>${project.hours}</td>
+        <td>R$ ${project.price}</td>
+        <td class="column-action"></td>
+    `;
+
+    let deleteButton = document.createElement('button');
+    deleteButton.classList.add('delete-btn');
+    deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+    deleteButton.addEventListener('click', () => {
+        deleteProject(index);
+    });
+
+    tr.querySelector('.column-action').appendChild(deleteButton);
+
+    tbody.appendChild(tr);
+}
+
+// Função para deletar um projeto
+function deleteProject(index) {
+	projects.splice(index, 1);
+	saveData();
+	loadData();
+}
+
+// Função para inserir um novo projeto se todos os inputs forem preenchidos corretamente
 function insertItem() {
 	if (validateInputs()) {
 		let investedHours = validateDates(
@@ -143,10 +161,18 @@ function insertItem() {
 		};
 
 		projects.push(project);
-		insertRow(project);
 		saveData();
+		loadData();
 	}
 }
+
+// Evento para deletar um projeto
+tbody.addEventListener('click', (event) => {
+	if (event.target.classList.contains('delete-btn')) {
+		const index = event.target.dataset.index;
+		deleteProject(index);
+	}
+});
 
 window.onload = loadData;
 btn.onclick = insertItem;
